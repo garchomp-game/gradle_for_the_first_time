@@ -7,7 +7,7 @@ import java.nio.file.*;
 import java.util.concurrent.Callable;
 import java.util.*;
 
-import controller.FileController;
+import service.FileManager;
 import myEnum.PathName;
 /*
 例えばpath_configに
@@ -40,11 +40,6 @@ public class App implements Callable<Integer> {
   description = "フル実行")
   private boolean full;
   
-  @Option(names = {"-m", "--mode"},
-  defaultValue = "empty",
-  description = "モード指定")
-  private String option;
-  
   @Parameters(paramLabel = "FILE", description = "ファイル取得")
   File[] files;
   
@@ -59,7 +54,7 @@ public class App implements Callable<Integer> {
     else
       for(int i = 0; i < files.length; i++)
         pathList[i] = this.files[i].toPath();
-    FileController fm = new FileController(this.files, this.option, pathList);
+    FileManager fm = new FileManager(this.files, pathList);
     fm.setLang(this.lang);
     fm.setCompile(this.compile);
     fm.setExecution(this.execution);

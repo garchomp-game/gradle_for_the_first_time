@@ -15,4 +15,11 @@ public enum Languages {
   public String toString() {
     return this.text;
   }
+  
+  public static Languages getLang(String lang) {
+    for(Languages val : Languages.values())
+      if(lang.equals(val.toString()))
+        return val;
+    return null;
+  }
 }

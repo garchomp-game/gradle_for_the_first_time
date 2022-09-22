@@ -6,7 +6,7 @@ import myEnum.PathName;
 import java.io.*;
 import org.apache.commons.io.FilenameUtils;
 import myException.NotMatchLangException;
-import controller.FileController;
+import logic.FileLogic;
 
 public class MyBuilder {
   private Path[] pathList = new Path[PathName.PATHLENGTH.get()];
@@ -29,8 +29,7 @@ public class MyBuilder {
     this.baseName = baseName;
   }
   
-  public Languages run(Languages language) {
-    System.out.println("myBuild run method");
+  public Languages build(Languages language) {
     switch(language) {
       case CLANG:
         return this.clang();
@@ -45,7 +44,7 @@ public class MyBuilder {
   private Languages clang() {
     if(!this.extension.equals("c")) {
       try {
-        throw new NotMatchLangException("C言語"); // NotMatchLangExceptionに置き換える
+        throw new NotMatchLangException("C言語");
       } catch (NotMatchLangException e) {
         e.printStackTrace();
         System.exit(0);
@@ -54,11 +53,11 @@ public class MyBuilder {
     StringBuilder command = new StringBuilder();
     command.append("gcc ");
     command.append(this.fileName);
-    if(FileController.isMoveDirectory(this.pathList)) {
+    if(FileLogic.isMoveDirectory(this.pathList)) {
       command.append(" -o ");
       command.append(this.baseName);
     }
-    if(build(command.toString()) == 1)
+    if(build(command.toString()))
       return Languages.CLANG;
     return null;
   }
@@ -74,7 +73,7 @@ public class MyBuilder {
     }
     StringBuilder command = new StringBuilder();
     command.append("javac ");
-    if(FileController.isMoveDirectory(this.pathList)) {
+    if(FileLogic.isMoveDirectory(this.pathList)) {
       try {
         command.append("-d ");
         command.append(this.pathList[PathName.DIRECTORYNAME.get()].toString());
@@ -84,7 +83,7 @@ public class MyBuilder {
       }
     }
     command.append(this.fileName);
-    if(build(command.toString()) == 1)
+    if(build(command.toString()))
       return Languages.JAVA;
     return null;
   }
@@ -99,12 +98,12 @@ public class MyBuilder {
       }
     }
     String command = "node " + this.fileName;
-    if(build(command) == 1)
+    if(build(command))
       return Languages.NODE;
     return null;
   }
   
-  private int build(String command) {
+  private boolean build(String command) {
     try {
       Process process = Runtime.getRuntime().exec(command);
       BufferedReader reader = new BufferedReader(
@@ -112,19 +111,16 @@ public class MyBuilder {
       
       StringBuilder output = new StringBuilder();
       String line;
+      String br = System.getProperty("line.separator");
       while ((line = reader.readLine()) != null) {
         output.append(line);
-        output.append(System.getProperty("line.separator"));
+        output.append(br);
       }
       System.out.println(output.toString());
-      return 1;
+      return true;
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return 0;
-  }
-  
-  public void runExtension(Path buildPath) {
-    // このあと実行処理を実装するので消さないで！
+    return false;
   }
 }

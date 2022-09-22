@@ -1,4 +1,4 @@
-package controller;
+package service;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -7,11 +7,10 @@ import service.MyBuilder;
 import myEnum.PathName;
 import myEnum.Languages;
 import org.apache.commons.io.FilenameUtils;
-import logic.FileManager;
+import logic.FileLogic;
 
-public class FileController {
+public class FileManager {
   private File[] files = new File[2];
-  private String option = "";
   private String lang = "";
   private boolean compile = false;
   private boolean execution = false;
@@ -21,14 +20,15 @@ public class FileController {
   private String extension;
   private String baseName;
   private String directoryName;
-  public FileController(File[] files, String option, Path[] pathList) {
+  private Path directoryPath;
+  public FileManager(File[] files, Path[] pathList) {
     this.files = files;
-    this.option = option;
     this.pathList = pathList;
     this.fileName = this.pathList[0].toString();
     this.extension = FilenameUtils.getExtension(this.fileName);
     this.baseName = FilenameUtils.getBaseName(this.fileName);
     this.directoryName = pathList[PathName.DIRECTORYNAME.get()].toString();
+    this.directoryPath = this.pathList[PathName.DIRECTORYNAME.get()];
   }
   public void setLang(String lang) {
     this.lang = lang;
@@ -44,6 +44,17 @@ public class FileController {
   }
   
   public int run() {
+    if(this.compile || this.full)
+      this.compile();
+    
+    if(FileLogic.isMoveDirectory(this.pathList))
+      this.fileMove();
+    // 実行メソッド
+    this.runExtension(FileLogic.getBuildPath(this.pathList, this.lang, this.baseName));
+    return 0;
+  }
+  
+  private void compile() {
     Languages result = null;
     MyBuilder mb = new MyBuilder(this.pathList, this.lang);
     mb.setFileName(this.fileName);
@@ -51,38 +62,29 @@ public class FileController {
     mb.setBaseName(this.baseName);
     for(Languages val : Languages.values())
       if(this.lang.equals(val.toString()))
-        result = mb.run(val);
-    
+        result = mb.build(val);
     if(Objects.isNull(result)) {
       try {
         throw new Exception("言語を指定してください");
       } catch (Exception e) {
         e.printStackTrace();
-        return 0;
       }
     }
-    if(isMoveDirectory(this.pathList)) {
-      // 後で関数に処理を分ける
-      Path filePath = this.pathList[PathName.FILENAME.get()];
-      Path directoryPath = this.pathList[PathName.DIRECTORYNAME.get()];
-      try {
-        String buildExtension = FileManager.getBuildExtension(result);
-        String moveFileName = this.baseName;
-        if(!buildExtension.isEmpty())
-          moveFileName += "." + buildExtension;
-        File buildFile = new File(moveFileName);
-        Path buildPath = buildFile.toPath();
-        Files.move(buildPath, directoryPath.resolve(moveFileName));
-        mb.runExtension(buildPath);// ← このあと実行処理を実装する
-      } catch(IOException e) {
-        e.printStackTrace();
-      }
-    }
-    return 0;
   }
   
-  public static boolean isMoveDirectory(Path[] pathList) {
-    return Files.isReadable(pathList[PathName.FILENAME.get()]) &&
-        Files.isDirectory(pathList[PathName.DIRECTORYNAME.get()]);
+  private void fileMove() {
+    String moveFileName = FileLogic.getMoveFileName(this.lang, this.baseName);
+    Path buildPath = FileLogic.getBuildPath(this.pathList, this.lang, this.baseName);
+    try {
+      if(Files.isReadable(buildPath))
+        Files.delete(this.directoryPath.resolve(moveFileName));
+      Files.move(buildPath, this.directoryPath.resolve(moveFileName));
+    } catch(IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public static void runExtension(Path buildPath) {
+    // このあと実行処理を実装するので消さないで！
   }
 }
