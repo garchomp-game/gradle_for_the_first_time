@@ -7,7 +7,7 @@ import java.io.*;
 import myEnum.*;
 
 public class FileLogic {
-  public static String getBuildExtension(Languages lang) {
+  public String getBuildExtension(Languages lang) {
     switch(lang) {
       case CLANG:
         return "";
@@ -18,9 +18,8 @@ public class FileLogic {
     }
     return "";
   }
-  
-  public static String getMoveFileName(String lang, String baseName) {
-    String buildExtension = getBuildExtension(Languages.getLang(lang));
+  public String getMoveFileName(String lang, String baseName) {
+    String buildExtension = this.getBuildExtension(Languages.getLang(lang));
     String moveFileName = baseName;
     if(!buildExtension.isEmpty())
       moveFileName += "." + buildExtension;
@@ -31,9 +30,9 @@ public class FileLogic {
         Files.isDirectory(pathList[PathName.DIRECTORYNAME.get()]);
   }
   
-  public static Path getBuildPath(Path[] pathList, String lang, String baseName) {
+  public Path getBuildPath(Path[] pathList, String lang, String baseName) {
     Path filePath = pathList[PathName.FILENAME.get()];
-    String moveFileName = FileLogic.getMoveFileName(lang, baseName);
+    String moveFileName = this.getMoveFileName(lang, baseName);
     File buildFile = new File(moveFileName);
     Path buildPath = buildFile.toPath();
     return buildPath;

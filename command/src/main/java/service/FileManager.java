@@ -50,7 +50,7 @@ public class FileManager {
     if(FileLogic.isMoveDirectory(this.pathList))
       this.fileMove();
     // 実行メソッド
-    this.runExtension(FileLogic.getBuildPath(this.pathList, this.lang, this.baseName));
+    this.runExtension();
     return 0;
   }
   
@@ -84,7 +84,10 @@ public class FileManager {
     }
   }
   
-  public static void runExtension(Path buildPath) {
+  public static void runExtension() {
     // このあと実行処理を実装するので消さないで！
+    FileLogic fl = new FileLogic();
+    Path buildPath = fl.getBuildPath(this.pathList, this.lang, this.baseName);
+    Path changePath = buildPath.resolve(fl.getBuildExtension(Languages.getLang(this.lang)));
   }
 }
