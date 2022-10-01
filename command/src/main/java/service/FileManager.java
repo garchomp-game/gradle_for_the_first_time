@@ -46,8 +46,8 @@ public class FileManager {
   public int run() {
     if(this.compile || this.full)
       this.compile();
-    
-    if(FileLogic.isMoveDirectory(this.pathList))
+    FileLogic fl = new FileLogic(); 
+    if(fl.isMoveDirectory(this.pathList))
       this.fileMove();
     // 実行メソッド
     this.runExtension();
@@ -73,8 +73,9 @@ public class FileManager {
   }
   
   private void fileMove() {
-    String moveFileName = FileLogic.getMoveFileName(this.lang, this.baseName);
-    Path buildPath = FileLogic.getBuildPath(this.pathList, this.lang, this.baseName);
+    FileLogic fi = new FileLogic();
+    String moveFileName = fi.getMoveFileName(this.lang, this.baseName);
+    Path buildPath = fi.getBuildPath(this.pathList, this.lang, this.baseName);
     try {
       if(Files.isReadable(buildPath))
         Files.delete(this.directoryPath.resolve(moveFileName));
@@ -84,7 +85,7 @@ public class FileManager {
     }
   }
   
-  public static void runExtension() {
+  public void runExtension() {
     // このあと実行処理を実装するので消さないで！
     FileLogic fl = new FileLogic();
     Path buildPath = fl.getBuildPath(this.pathList, this.lang, this.baseName);

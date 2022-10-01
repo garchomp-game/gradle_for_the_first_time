@@ -25,7 +25,7 @@ public class FileLogic {
       moveFileName += "." + buildExtension;
     return moveFileName;
   }
-  public static boolean isMoveDirectory(Path[] pathList) {
+  public boolean isMoveDirectory(Path[] pathList) {
     return Files.isReadable(pathList[PathName.FILENAME.get()]) &&
         Files.isDirectory(pathList[PathName.DIRECTORYNAME.get()]);
   }

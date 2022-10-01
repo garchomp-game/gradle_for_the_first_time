@@ -14,9 +14,11 @@ public class MyBuilder {
   private String extension;
   private String fileName;
   private String baseName;
+  FileLogic fileLogic;
   public MyBuilder(Path[] pathList, String lang) {
     this.pathList = pathList;
     this.lang = lang;
+    this.fileLogic = new FileLogic();
   }
   
   public void setFileName(String fileName) {
@@ -53,7 +55,7 @@ public class MyBuilder {
     StringBuilder command = new StringBuilder();
     command.append("gcc ");
     command.append(this.fileName);
-    if(FileLogic.isMoveDirectory(this.pathList)) {
+    if(this.fileLogic.isMoveDirectory(this.pathList)) {
       command.append(" -o ");
       command.append(this.baseName);
     }
@@ -73,7 +75,7 @@ public class MyBuilder {
     }
     StringBuilder command = new StringBuilder();
     command.append("javac ");
-    if(FileLogic.isMoveDirectory(this.pathList)) {
+    if(this.fileLogic.isMoveDirectory(this.pathList)) {
       try {
         command.append("-d ");
         command.append(this.pathList[PathName.DIRECTORYNAME.get()].toString());
