@@ -47,6 +47,7 @@ public class App implements Callable<Integer> {
   
   @Override
   public Integer call() throws Exception {
+    System.out.println(this.lang);
     Path[] pathList = new Path[PathName.PATHLENGTH.get()];
     if(Objects.isNull(this.files))
       throw new NullPointerException("ファイルを指定してください");  

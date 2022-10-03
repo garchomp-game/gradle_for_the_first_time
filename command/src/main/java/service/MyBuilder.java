@@ -65,6 +65,7 @@ public class MyBuilder {
   }
   
   private Languages java() {
+    System.out.println("java");
     if(!this.extension.equals("java")) {
       try {
         throw new NotMatchLangException("java");

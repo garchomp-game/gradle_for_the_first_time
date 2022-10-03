@@ -8,6 +8,7 @@ import myEnum.PathName;
 import myEnum.Languages;
 import org.apache.commons.io.FilenameUtils;
 import logic.FileLogic;
+import org.apache.commons.lang3.*;
 
 public class FileManager {
   private File[] files = new File[2];
@@ -49,13 +50,20 @@ public class FileManager {
     FileLogic fl = new FileLogic(); 
     if(fl.isMoveDirectory(this.pathList))
       this.fileMove();
+    if(BooleanUtils.isFalse(this.compile))
+      try {
+        throw new Exception("言語を指定してください");
+      } catch(Exception e) {
+        e.printStackTrace(); 
+      }
     // 実行メソッド
     this.runExtension();
     return 0;
   }
   
-  private void compile() {
+    private void compile() {
     Languages result = null;
+    System.out.println(this.lang + " compile");
     MyBuilder mb = new MyBuilder(this.pathList, this.lang);
     mb.setFileName(this.fileName);
     mb.setExtension(this.extension);
