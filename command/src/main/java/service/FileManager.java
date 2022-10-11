@@ -28,8 +28,10 @@ public class FileManager {
     this.fileName = this.pathList[0].toString();
     this.extension = FilenameUtils.getExtension(this.fileName);
     this.baseName = FilenameUtils.getBaseName(this.fileName);
-    this.directoryName = pathList[PathName.DIRECTORYNAME.get()].toString();
-    this.directoryPath = this.pathList[PathName.DIRECTORYNAME.get()];
+    if(pathList.length == 1) {
+      this.directoryName = this.pathList[PathName.DIRECTORYNAME.get()].toString();
+      this.directoryPath = this.pathList[PathName.DIRECTORYNAME.get()];
+     }
   }
   public void setLang(String lang) {
     this.lang = lang;
@@ -98,5 +100,6 @@ public class FileManager {
     FileLogic fl = new FileLogic();
     Path buildPath = fl.getBuildPath(this.pathList, this.lang, this.baseName);
     Path changePath = buildPath.resolve(fl.getBuildExtension(Languages.getLang(this.lang)));
+    System.out.println(changePath.toString());
   }
 }
