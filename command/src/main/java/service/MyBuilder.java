@@ -10,6 +10,24 @@ import myEnum.PathName;
 import myException.NotMatchLangException;
 
 public class MyBuilder {
+  private Path[] pathList = new Path[PathName.PATHLENGTH.get()];
+
+  private String lang;
+
+  private String extension;
+
+  private String fileName;
+
+  private String baseName;
+
+  FileLogic fileLogic;
+
+  public MyBuilder(final Path[] pathList, final String lang) {
+    this.pathList = pathList;
+    this.lang = lang;
+    this.fileLogic = new FileLogic();
+  }
+
   public Path[] getPathList() {
     return pathList;
   }
@@ -44,19 +62,6 @@ public class MyBuilder {
 
   public void setFileLogic(final FileLogic fileLogic) {
     this.fileLogic = fileLogic;
-  }
-
-  private Path[] pathList = new Path[PathName.PATHLENGTH.get()];
-  private String lang;
-  private String extension;
-  private String fileName;
-  private String baseName;
-  FileLogic fileLogic;
-
-  public MyBuilder(final Path[] pathList, final String lang) {
-    this.pathList = pathList;
-    this.lang = lang;
-    this.fileLogic = new FileLogic();
   }
 
   public void setFileName(final String fileName) {

@@ -1,13 +1,15 @@
 import java.io.File;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Path;
+import java.util.Objects;
 import java.util.concurrent.Callable;
+
 import myEnum.PathName;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import service.FileManager;
+
 /*
 例えばpath_configに
 lang=gcc // node ruby java...
@@ -17,6 +19,11 @@ default_source_path=path/to/
 */
 @Command(name = "run", mixinStandardHelpOptions = true, version = "1.0", description = "様々な言語のコンパイルと実行をしやすくしたコマンド")
 public class App implements Callable<Integer> {
+  public static void main(String... args) {
+    int exitCode = new CommandLine(new App()).execute(args);
+    System.exit(exitCode);
+  }
+
   @Option(names = { "-l", "--lang" }, defaultValue = "", description = "言語のセットができます")
   private String lang;
 
@@ -50,10 +57,5 @@ public class App implements Callable<Integer> {
     fm.setExecution(this.execution);
     fm.setFull(this.full);
     return fm.run();
-  }
-
-  public static void main(String... args) {
-    int exitCode = new CommandLine(new App()).execute(args);
-    System.exit(exitCode);
   }
 }

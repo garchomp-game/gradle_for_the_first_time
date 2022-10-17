@@ -1,14 +1,15 @@
 package logic;
 
-import org.apache.commons.io.FilenameUtils;
-import java.util.*;
-import java.nio.file.*;
-import java.io.*;
-import myEnum.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import myEnum.Languages;
+import myEnum.PathName;
 
 public class FileLogic {
-  public String getBuildExtension(Languages lang) {
-    switch(lang) {
+  public String getBuildExtension(final Languages lang) {
+    switch (lang) {
       case CLANG:
         return "";
       case JAVA:
@@ -18,23 +19,25 @@ public class FileLogic {
     }
     return "";
   }
-  public String getMoveFileName(String lang, String baseName) {
-    String buildExtension = this.getBuildExtension(Languages.getLang(lang));
+
+  public String getMoveFileName(final String lang, final String baseName) {
+    final String buildExtension = this.getBuildExtension(Languages.getLang(lang));
     String moveFileName = baseName;
-    if(!buildExtension.isEmpty())
+    if (!buildExtension.isEmpty())
       moveFileName += "." + buildExtension;
     return moveFileName;
   }
-  public boolean isMoveDirectory(Path[] pathList) {
+
+  public boolean isMoveDirectory(final Path[] pathList) {
     return Files.isReadable(pathList[PathName.FILENAME.get()]) &&
         Files.isDirectory(pathList[PathName.DIRECTORYNAME.get()]);
   }
-  
-  public Path getBuildPath(Path[] pathList, String lang, String baseName) {
-    Path filePath = pathList[PathName.FILENAME.get()];
-    String moveFileName = this.getMoveFileName(lang, baseName);
-    File buildFile = new File(moveFileName);
-    Path buildPath = buildFile.toPath();
+
+  public Path getBuildPath(final Path[] pathList, final String lang, final String baseName) {
+    final Path filePath = pathList[PathName.FILENAME.get()];
+    final String moveFileName = this.getMoveFileName(lang, baseName);
+    final File buildFile = new File(moveFileName);
+    final Path buildPath = buildFile.toPath();
     return buildPath;
   }
 }
