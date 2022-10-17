@@ -15,27 +15,24 @@ default_mode=full // compile run...
 default_code_path=path/to/
 default_source_path=path/to/
 */
-@Command(name = "run", mixinStandardHelpOptions = true, version = "1.0",
-         description = "様々な言語のコンパイルと実行をしやすくしたコマンド")
+@Command(name = "run", mixinStandardHelpOptions = true, version = "1.0", description = "様々な言語のコンパイルと実行をしやすくしたコマンド")
 public class App implements Callable<Integer> {
-  @Option(names = {"-l", "--lang"}, defaultValue = "",
-          description = "言語のセットができます")
+  @Option(names = { "-l", "--lang" }, defaultValue = "", description = "言語のセットができます")
   private String lang;
 
-  @Option(names = {"-c", "--compile"}, description = "コンパイルをします")
+  @Option(names = { "-c", "--compile" }, description = "コンパイルをします")
   private boolean compile;
 
-  @Option(names = {"-e", "--execution"},
-          description = "コンパイルしたファイルを実行します")
+  @Option(names = { "-e", "--execution" }, description = "コンパイルしたファイルを実行します")
   private boolean execution;
 
-  @Option(names = {"-f", "--full"}, description = "フル実行")
+  @Option(names = { "-f", "--full" }, description = "フル実行")
   private boolean full;
 
-  @Parameters(paramLabel = "FILE", description = "ファイル取得") File[] files;
+  @Parameters(paramLabel = "FILE", description = "ファイル取得")
+  File[] files;
 
-  @Option(names = {"-h", "--help"}, usageHelp = true,
-          description = "ヘルプ一覧")
+  @Option(names = { "-h", "--help" }, usageHelp = true, description = "ヘルプ一覧")
   private boolean helpRequested = false;
 
   @Override
