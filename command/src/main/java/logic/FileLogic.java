@@ -34,7 +34,6 @@ public class FileLogic {
   }
 
   public Path getBuildPath(final Path[] pathList, final String lang, final String baseName) {
-    final Path filePath = pathList[PathName.FILENAME.get()];
     final String moveFileName = this.getMoveFileName(lang, baseName);
     final File buildFile = new File(moveFileName);
     final Path buildPath = buildFile.toPath();
